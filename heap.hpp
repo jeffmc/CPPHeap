@@ -9,9 +9,15 @@ class IntHeap {
 		array[b] = t;
 	}
 	void swim(int idx) {
-		
+		int pidx = parent(idx);
+		while (pidx >=0 && pidx < _size && array[pidx] < array[idx]) {
+			swap(pidx,idx);
+			idx = pidx;
+			pidx = parent(idx); 
+		}
 	}
 	void sink() {
+		// TODO: Implement!
 	}
 public:
 	size_t size() const { return _size; }
@@ -29,8 +35,12 @@ public:
 	}
 	void add(int number) {
 		array[_size++] = number;
+		swim(_size-1);
 	}
 	int get(size_t index) {
 		return array[index];
+	}
+	int* getRaw() {
+		return array;
 	}
 };

@@ -18,5 +18,9 @@ int main() {
 		printf("%d\n", r);
 		ih.add(r);
 	}	
-
+	printf("\n HEAP: \n");
+	int* raw = ih.getRaw();
+	for (int i=0;i<ih.size();i++) {
+		printf("%d\n", raw[i]);
+	}
 }
