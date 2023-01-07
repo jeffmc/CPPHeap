@@ -1,23 +1,56 @@
+#include <cstdlib>
+
 class IntHeap {
 	int* array;
 	size_t _size, _space; // space is available, size is used.
-
+	void grow() {
+		if (_space > 0) {
+			_space *= 2;
+		}
+		else {
+			_space = 1;
+		}
+		int* newptr = (int*) realloc(array, sizeof(int) * _space);
+		array = newptr;
+	}
 	// Swap two values in array at specified indices.	
 	void swap(size_t a, size_t b) {
 		int t = array[a];
 		array[a] = array[b];
 		array[b] = t;
 	}
-	void swim(int idx) {
-		int pidx = parent(idx);
-		while (pidx >=0 && pidx < _size && array[pidx] < array[idx]) {
-			swap(pidx,idx);
-			idx = pidx;
-			pidx = parent(idx); 
+	void swim(size_t idx) {
+		while (true) {
+			size_t pidx = parent(idx);
+			if (pidx < _size && array[pidx] < array[idx]) {
+				swap(pidx, idx);
+				idx = pidx;
+			}
+			else {
+				break;
+			}
 		}
 	}
-	void sink() {
-		// TODO: Implement!
+	void sink(size_t idx) {
+		while (true) {
+			size_t li = lchild(idx), ri = rchild(idx);
+			if (li < _size && ri < _size) {
+				int si = array[li] > array[ri] ? li : ri;
+				swap(si, idx);
+				idx = si;
+			}
+			else if (li < _size) {
+				swap(li, idx);
+				idx = li;
+			}
+			else if (ri < _size) {
+				swap(ri, idx);
+				idx = ri;
+			}
+			else {
+				break;
+			}
+		}
 	}
 public:
 	size_t size() const { return _size; }
@@ -29,15 +62,32 @@ public:
 	// Parent index
 	size_t inline parent(size_t index) const { return (index-1) / 2; }
 	IntHeap() {
-		_space = 130;
+		_space = 8;
 		_size = 0;
-		array = new int[_space];
+		array = (int*) malloc(sizeof(int) * _space);
+	}
+	IntHeap(const IntHeap& o) {
+		_space = o._size;
+		_size = o._size;
+		array = (int*) malloc(_space * sizeof(int));
+		if (array && o.array) memcpy(array, o.array, _size * sizeof(int));
+	}
+	~IntHeap() {
+		if (array) free(array);
 	}
 	void add(int number) {
-		array[_size++] = number;
+		_size++;
+		if (_size > _space) grow();
+		array[_size-1] = number;
 		swim(_size-1);
 	}
-	int get(size_t index) {
+	int remove() {
+		int num = array[0];
+		array[0] = array[--_size];
+		sink(0);
+		return num;
+	}
+	int peek(size_t index) const {
 		return array[index];
 	}
 	int* getRaw() {
