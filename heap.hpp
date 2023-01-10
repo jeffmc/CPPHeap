@@ -1,4 +1,7 @@
+#pragma once
+
 #include <cstdlib>
+#include <cstring>
 
 class IntHeap {
 	int* array;
