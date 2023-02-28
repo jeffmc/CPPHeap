@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cassert>
 #include <cstdlib>
 #include <cstring>
 
@@ -18,14 +19,18 @@ class IntHeap {
 	}
 	// Swap two values in array at specified indices.	
 	void swap(size_t a, size_t b) {
+		assert(a < _size);
+		assert(b < _size);
 		int t = array[a];
 		array[a] = array[b];
 		array[b] = t;
 	}
 	void swim(size_t idx) {
+		assert(idx < _size);
 		while (true) {
+			if (idx == 0) break;
 			size_t pidx = parent(idx);
-			if (pidx < _size && array[pidx] < array[idx]) {
+			if (array[pidx] < array[idx]) {
 				swap(pidx, idx);
 				idx = pidx;
 			}
@@ -35,20 +40,27 @@ class IntHeap {
 		}
 	}
 	void sink(size_t idx) {
+		assert(idx < _size);
 		while (true) {
 			size_t li = lchild(idx), ri = rchild(idx);
-			if (li < _size && ri < _size) {
+			if (ri < _size) { // If ri is less than size, this means li is also less than size
 				int si = array[li] > array[ri] ? li : ri;
-				swap(si, idx);
-				idx = si;
+				if (array[si] > array[idx]) {
+					swap(si, idx);
+					idx = si;
+				}
+				else {
+					break;
+				}
 			}
 			else if (li < _size) {
+				if (array[li] > array[idx]) {
 				swap(li, idx);
 				idx = li;
-			}
-			else if (ri < _size) {
-				swap(ri, idx);
-				idx = ri;
+				}
+				else {
+					break;
+				}
 			}
 			else {
 				break;
@@ -86,19 +98,16 @@ public:
 		swim(_size-1);
 	}
 	int pop() {
+		assert(_size > 0);
 		int num = array[0];
-		array[0] = array[--_size];
-		sink(0);
+		--_size;
+		if (_size > 0) {
+			array[0] = array[_size];
+			sink(0);
+		}
 		return num;
 	}
 	int peek(size_t index) const {
 		return array[index];
-	}
-	void rawSizeSet(size_t newSz) {
-		_size = newSz;
-		while (_size > _space) grow();
-	}
-	void rawSet(size_t index, int val) {
-		array[index] = val;
 	}
 };

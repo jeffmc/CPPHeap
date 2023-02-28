@@ -13,29 +13,21 @@ int main() {
 	srand(10240);
 
 	IntHeap ih;
-	// printf("Generation:\n");
-	// for (int i=0;i<10;i++) {
-	// 	int r = rand() % 1000;
-	// 	printf("%i\n", r);
-	// 	ih.push(r);
-	// }
-
-	// BUG TESTING DATA:
-	ih.rawSizeSet(5);
-	ih.rawSet(0,451);
-	ih.rawSet(1,336);
-	ih.rawSet(3,72);
-	ih.rawSet(4,115);
-	ih.rawSet(2,243);
+	printf("Generation:\n");
+	for (int i=0;i<100;i++) {
+		int r = rand() % 1000;
+		// printf("%i\n", r);
+		ih.push(r);
+	}
 
 	printf("\n TREE: \n");
 	printNode(ih, 0, 1);
 
-	printf("\n\n");
+	printf("\n");
 	while (ih) {
-		printf("Extracted: %i\n NEWTREE:\n", ih.pop());
-		printNode(ih, 0, 1);
-		printf("\n\n");
+		printf("Extracted: %i\n", ih.pop());
+		// printNode(ih, 0, 1);
+		// printf("\n");
 	}
 }
 
