@@ -56,6 +56,7 @@ class IntHeap {
 		}
 	}
 public:
+	operator bool() const { return _size > 0; }
 	size_t size() const { return _size; }
 	size_t space() const { return _space; }
 	// Left child index
@@ -78,13 +79,13 @@ public:
 	~IntHeap() {
 		if (array) free(array);
 	}
-	void add(int number) {
-		_size++;
+	void push(int number) {
+		++_size;
 		if (_size > _space) grow();
 		array[_size-1] = number;
 		swim(_size-1);
 	}
-	int remove() {
+	int pop() {
 		int num = array[0];
 		array[0] = array[--_size];
 		sink(0);
@@ -93,7 +94,11 @@ public:
 	int peek(size_t index) const {
 		return array[index];
 	}
-	int* getRaw() {
-		return array;
+	void rawSizeSet(size_t newSz) {
+		_size = newSz;
+		while (_size > _space) grow();
+	}
+	void rawSet(size_t index, int val) {
+		array[index] = val;
 	}
 };
