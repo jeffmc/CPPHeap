@@ -6,18 +6,52 @@
 
 #include "heap.hpp"
 
+// Read in a line from the console.
+void consolein(char* cstr, std::streamsize n) {
+	std::cin.getline(cstr, n);
+	if (std::cin.fail()) {
+		std::cin.clear();
+		std::cin.ignore();
+	}
+	#ifdef CONSOLEINDBG
+	printf("\"%s\"\n",cstr);
+	#endif
+}
+
 void printNode(const IntHeap&, int, int);
 
-int main() {	
-	//srand(time(NULL));
-	srand(10240);
+void randomGen(IntHeap& ih, size_t count) {
+	srand(time(NULL));
 
-	IntHeap ih;
-	printf("Generation:\n");
-	for (int i=0;i<100;i++) {
+	printf("Generating %u numbers...\n", count);
+	for (int i=0;i<count;i++) {
 		int r = rand() % 1000;
-		// printf("%i\n", r);
 		ih.push(r);
+	}
+}
+
+int main() {
+	IntHeap ih;
+
+	char buf[32] = { '\0' };
+	while (true) {
+		printf("INPUT TYPE (\"CMD\" / \"FILE\" / \"RANDOM\"): ");
+		consolein(buf, 32);
+		if (strcmp(buf,"CMD") == 0) {
+			printf("CMD in!\n");
+			break;
+		}
+		else if (strcmp(buf,"FILE") == 0) {
+			printf("TODO: File input!\n");
+			break;
+		}
+		else if (strcmp(buf,"RANDOM") == 0) {
+			randomGen(ih,100);
+			break;
+		}
+		else {
+			printf("Try again!\n");
+		}
 	}
 
 	printf("\n TREE: \n");
