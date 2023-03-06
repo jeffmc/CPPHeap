@@ -91,13 +91,17 @@ public:
 	~IntHeap() {
 		if (array) free(array);
 	}
-	void push(int number) {
+	// Increment size, grow if needed, add element to end and "swim" it upwards
+	void push(int number) 
+	{ 
 		++_size;
 		if (_size > _space) grow();
 		array[_size-1] = number;
 		swim(_size-1);
 	}
-	int pop() {
+	// Remove the max element (decrement size), replace it with last element in heap and sink that element downwards
+	int pop() 
+	{
 		assert(_size > 0);
 		int num = array[0];
 		--_size;
@@ -107,6 +111,7 @@ public:
 		}
 		return num;
 	}
+	// Peek the highest element in the heap. This might be a bad output if size = 0.
 	int peek(size_t index) const {
 		return array[index];
 	}
