@@ -113,6 +113,16 @@ public:
 	}
 	// Peek the highest element in the heap. This might be a bad output if size = 0.
 	int peek(size_t index) const {
+		assert(_size > 0);
 		return array[index];
+	}
+
+	// Clear all elements from heap, shrink internal array back to small default size.
+	void clear() {
+		_size = 0;
+		_space = 8;
+		
+		free(array);
+		array = (int*) malloc(sizeof(int) * _space);
 	}
 };
